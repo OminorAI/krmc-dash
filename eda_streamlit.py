@@ -265,7 +265,6 @@ top_10_products = (
 )
 
 df_product_sales_volume_top_10 = df_product_sales_volume[df_product_sales_volume["Item Description"].isin(top_10_products)]
-st.table(df_product_sales_volume_top_10)
 # make a seperate line for each year
 
 fig = px.bar(
