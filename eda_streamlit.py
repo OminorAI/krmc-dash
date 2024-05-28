@@ -64,7 +64,7 @@ st.write(f"Sum of cost of sales: R{total_cost_sales:,.2f}")
 
 # Distribution of Retail Prices
 fig1 = px.histogram(df, x="Retail", nbins=1000, title="Distribution of Retail Prices")
-st.plotly_chart(fig1)
+st.plotly_chart(fig1, use_container_width=True)
 
 # Filtering data
 df = df[df["Retail"] < 65000]
@@ -74,7 +74,7 @@ df_fa = df.copy()
 fig2 = px.histogram(
     df_fa, x="Retail", nbins=1000, title="Distribution of Retail Prices after Filtering"
 )
-st.plotly_chart(fig2)
+st.plotly_chart(fig2, use_container_width=True)
 
 # Gross profit over the period
 gross_profit = df_fa["Retail"].sum() - df_fa["Cost"].sum()
@@ -93,7 +93,7 @@ df_fa_gp = (
 fig3 = px.line(
     df_fa_gp, x="Script Date", y="gross_profit", title="Gross Profit over Time"
 )
-st.plotly_chart(fig3)
+st.plotly_chart(fig3, use_container_width=True)
 
 rolling_window = st.number_input(
     "Enter the rolling window for moving average",
@@ -111,7 +111,7 @@ fig = px.line(
     y="gross_profit_moving_avg",
     title=f"Gross Profit Moving Average over Time with {rolling_window} days window",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 # Average profit by month
 df_fa["Month"] = df_fa["Script Date"].dt.month
@@ -119,7 +119,7 @@ df_fa_gp_month = df_fa.groupby("Month")[["gross_profit"]].mean().reset_index()
 fig5 = px.bar(
     df_fa_gp_month, x="Month", y="gross_profit", title="Average Profit by Month"
 )
-st.plotly_chart(fig5)
+st.plotly_chart(fig5, use_container_width=True)
 
 # # Sum and gross profit by sector
 # df_fa['Sctno'] = df_fa['Sctno'].astype('str')
@@ -135,7 +135,7 @@ fig.add_trace(go.Box(y=df_fa_s_fa["Cost"], name="Cost"))
 fig.add_trace(go.Box(y=df_fa_s_fa["Retail"], name="Retail"))
 fig.add_trace(go.Box(y=df_fa_s_fa["gross_profit"], name="Gross Profit"))
 fig.update_layout(title="Box and Whisker Plot of Cost, Retail and Gross Profit")
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 st.header("2. Operational Analysis")
 
@@ -162,7 +162,7 @@ fig = px.line(
     color="Dispenser",
     title="Number of Scripts per Day",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 disp_roll_window = st.number_input(
     "Enter the rolling window for moving average for Number of Scripts per Day",
@@ -181,7 +181,7 @@ fig = px.line(
     color="Dispenser",
     title=f"Scripts Moving Average over Time with {disp_roll_window} days window",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 df_disp_stats = df_disp.groupby("Dispenser")["Sctno"].describe().reset_index()
 df_disp_stats["mean_of_means"] = df_disp_stats["mean"].mean()
@@ -191,7 +191,7 @@ fig = px.bar(
     y="count",
     title="Number of days active at KRMC Dispensary",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 fig = px.bar(
     df_disp_stats, x="Dispenser", y="mean", title="Mean Scripts per Day per Dispenser"
 )
@@ -202,7 +202,7 @@ fig.add_trace(
         name="Mean for All",
     )
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 df_disp["Script Date"] = pd.to_datetime(df_disp["Script Date"]).dt.date
 
 
@@ -232,7 +232,7 @@ fig = px.bar(
     y="rate_of_scripts",
     title="Mean Scripts per Hour per Dispenser",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 st.header("3. Product Analysis")
 df["Year"] = df["Year"].astype(str)
@@ -261,7 +261,7 @@ fig = px.bar(
     color="Year",
     barmode="group",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 df["Script Date Month"] = (
     pd.to_datetime(df["Script Date"]).dt.to_period("M").astype(str)
@@ -297,7 +297,7 @@ fig = px.bar(
     title="Top 10 Products by Gross Profit",
     orientation="v",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 item = st.selectbox("Select Product", products)
 # for item in top_10_products:
 temp_df = df_product_monthly_volume[
@@ -306,7 +306,7 @@ temp_df = df_product_monthly_volume[
 fig = px.line(
     temp_df, x="Script Date Month", y="Sctno", title=f"Monthly Volume for {item}"
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 df_product_monthly_volume["Script Date Month"] = pd.to_datetime(
@@ -389,7 +389,7 @@ fig.update_layout(title=f"Monthly Volume and Quantity for Product {item}")
 fig.update_xaxes(title_text="Date")
 fig.update_yaxes(title_text="Volume", secondary_y=False)
 fig.update_yaxes(title_text="Quantity", secondary_y=True)
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 df_product_monthly_volume_year = (
@@ -493,7 +493,7 @@ fig.update_layout(title=f"Monthly Volume and Quantity for Product {item} by Year
 fig.update_xaxes(title_text="Date")
 fig.update_yaxes(title_text="Volume", secondary_y=False)
 fig.update_yaxes(title_text="Quantity", secondary_y=True)
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 df_product_medical_aid = (
     df.groupby(["Medical Aid", "Item Description"])["Sctno"].count().reset_index()
@@ -519,7 +519,7 @@ fig = px.bar(
     y="Item Description",
     title=f"Top 5 Products for {medical_aid} Medical Aid",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 st.header("4. Doctor Analysis")
@@ -548,7 +548,7 @@ fig6 = px.line(
     color="Doctor",
     title=f"Gross Profit by KRMC Doctor over Time with {dr_gp_rolling_window} days window",
 )
-st.plotly_chart(fig6)
+st.plotly_chart(fig6, use_container_width=True)
 
 df_krmc_doctors = df[df["Doctor"].isin(krmc_doctors)]
 df_krmc_doctors_monthly_volume = (
@@ -566,7 +566,7 @@ fig = px.line(
     color="Doctor",
     title="Monthly Script Volumes for KRMC Doctors",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 df_krmc_doctors_monthly_volume["Month"] = df_krmc_doctors_monthly_volume[
     "Script Date Month"
@@ -601,7 +601,7 @@ fig = px.line(
     color="Doctor",
     title="Monthly Script Volumes for KRMC Doctors",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 external_doctors = df[~df["Doctor"].isin(krmc_doctors)]["Doctor"].unique().tolist()
@@ -632,7 +632,7 @@ fig = px.line(
     color="Doctor",
     title="Monthly Script Volumes for Top 5 External Doctors",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 df_external_doctors_monthly_volume_2023 = df_external_doctors_monthly_volume[
     df_external_doctors_monthly_volume["Script Date Month"] >= "2023-01-01"
@@ -670,7 +670,7 @@ fig = px.line(
     color="Doctor",
     title="Monthly Script Volumes for Top 5 External Doctors in 2023",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 krmc_doctor = st.selectbox("Select KRMC Doctor", krmc_doctors)
@@ -759,7 +759,7 @@ fig = px.line(
     color="Item Description",
     title=f"Top 5 Products by Month for {krmc_doctor}",
 )
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 df_krmc_doctors_top_5 = (
     df_krmc_doctors.groupby(["Doctor", "Item Description"])["Sctno"]
@@ -782,7 +782,7 @@ fig = px.bar(
     title=f"Top 5 Products by Scipt Volume for {krmc_doctor}",
 )
 fig.update_layout(xaxis_title="Script Volume")
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 
 # Conclusion
