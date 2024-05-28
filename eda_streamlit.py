@@ -244,9 +244,28 @@ df_product_volume = (
 df_product_sales_volume = pd.merge(
     df_product_sales, df_product_volume, on=["Item Description", "Year"]
 )
-df_product_sales_volume_top_10 = df_product_sales_volume.sort_values(
-    by="Volume", ascending=False
-).head(10)
+
+df_product_sales_exc_year = (
+    df.groupby(["Item Description"])[["Retail", "Cost"]].sum().reset_index()
+)
+df_product_volume_exc_year = (
+    df.groupby(["Item Description"])["Sctno"]
+    .count()
+    .reset_index()
+    .rename(columns={"Sctno": "Volume"})
+)
+df_product_sales_volume_exc_year = pd.merge(
+    df_product_sales, df_product_volume, on=["Item Description"]
+)
+top_10_products = (
+    df_product_sales_volume_exc_year.sort_values(by="Volume", ascending=False)
+    .drop_duplicates("Item Description", keep="first")
+    .head(10)["Item Description"]
+    .tolist()
+)
+
+df_product_sales_volume_top_10 = df_product_sales_volume[df_product_sales_volume["Item Description"].isin(top_10_products)]
+st.table(df_product_sales_volume_top_10)
 # make a seperate line for each year
 
 fig = px.bar(
@@ -261,12 +280,6 @@ st.plotly_chart(fig, use_container_width=True)
 
 df["Script Date Month"] = (
     pd.to_datetime(df["Script Date"]).dt.to_period("M").astype(str)
-)
-top_10_products = (
-    df_product_sales_volume.sort_values(by="Volume", ascending=False)
-    .drop_duplicates("Item Description", keep="first")
-    .head(10)["Item Description"]
-    .tolist()
 )
 products = (
     df_product_sales_volume.sort_values(by="Volume", ascending=False)
