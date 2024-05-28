@@ -56,23 +56,19 @@ df["Year"] = df["Script Date"].dt.year
 
 st.header("1. Financial Analysis")
 
-# Sum of all retail sales and cost of sales
-total_retail_sales = df["Retail"].sum()
-total_cost_sales = df["Cost"].sum()
-st.write(f"Sum of all retail sales: R{total_retail_sales:,.2f}")
-st.write(f"Sum of cost of sales: R{total_cost_sales:,.2f}")
-
-# Distribution of Retail Prices
-fig1 = px.histogram(df, x="Retail", nbins=1000, title="Distribution of Retail Prices")
-st.plotly_chart(fig1, use_container_width=True)
-
 # Filtering data
 df = df[df["Retail"] < 65000]
 df_fa = df.copy()
 
+total_retail_sales = df[df['Year']==2023]["Retail"].sum()
+total_cost_sales = df[df['Year']==2023]["Cost"].sum()
+st.write(f"Sum of all retail sales: R{total_retail_sales:,.2f} in 2023")
+st.write(f"Sum of cost of sales: R{total_cost_sales:,.2f} in 2023")
+st.write(f"Total Gross Profit: R{total_retail_sales - total_cost_sales:,.2f} in 2023")
 # Updated Distribution of Retail Prices
+df_fa['Year'] = df_fa['Year'].astype(str)
 fig2 = px.histogram(
-    df_fa, x="Retail", nbins=1000, title="Distribution of Retail Prices after Filtering"
+    df_fa, x="Retail", nbins=1000, title="Distribution of Retail Prices after Filtering", color="Year"
 )
 st.plotly_chart(fig2, use_container_width=True)
 
@@ -83,15 +79,15 @@ period = (
     + " to "
     + df_fa["Script Date"].max().strftime("%d-%b-%Y")
 )
-st.write(f"Gross profit over the  {period}: R{gross_profit:,.2f}")
+st.write(f"Gross profit over the period {period}: R{gross_profit:,.2f}")
 
 # Gross profit over time
 df_fa["gross_profit"] = df_fa["Retail"] - df_fa["Cost"]
 df_fa_gp = (
     df_fa.groupby("Script Date")[["Cost", "Retail", "gross_profit"]].sum().reset_index()
 )
-fig3 = px.line(
-    df_fa_gp, x="Script Date", y="gross_profit", title="Gross Profit over Time"
+fig3 = px.histogram(
+    df_fa_gp, x="Script Date", y="gross_profit", title="Gross Profit over Time", nbins=60
 )
 st.plotly_chart(fig3, use_container_width=True)
 
