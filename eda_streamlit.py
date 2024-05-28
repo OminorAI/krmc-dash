@@ -46,7 +46,7 @@ This dashboard presents an exploratory data analysis (EDA) on KRMC's Pharmacy Da
 
 # Load the data
 df = pd.read_csv(
-    "../bin/data/processed/anon_krmc_five_year_data_19_23.csv",
+    "anon_krmc_five_year_data_19_23.csv",
     low_memory=False,
     index_col=0,
 )
@@ -453,7 +453,7 @@ df_product_monthly_qty_year["Month"] = df_product_monthly_qty_year["Month"].repl
 years_to_compare = st.multiselect(
     f"Select Years to Compare for {item}",
     ["2020", "2021", "2022", "2023"],
-    ["2020", "2021"],
+    ["2022", "2023"],
 )
 df_product_monthly_volume_quantity_year = df_product_monthly_volume_year.merge(
     df_product_monthly_qty_year,
